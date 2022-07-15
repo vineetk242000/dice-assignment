@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import Card from "../components/Card";
 import Spinner from "../components/Spinner";
 import "../styles/Home.css";
