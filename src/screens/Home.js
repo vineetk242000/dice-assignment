@@ -75,7 +75,6 @@ const Home = () => {
     });
 
     if (response.status === 200) {
-      console.log(response.data.items);
       setRepositories(response.data.items);
       setTotalCount(response.data.total_count);
       setLoading(false);

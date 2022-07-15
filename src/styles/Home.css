@@ -6,7 +6,6 @@ body {
 
 .root {
   display: flex;
-  flex-wrap: wrap;
   margin: 1rem 0;
   padding: 1rem;
   flex-direction: column;
@@ -14,6 +13,7 @@ body {
   width: 100%;
   position: relative;
   top: 75px;
+  box-sizing: border-box;
 }
 
 .select-container select {
@@ -44,6 +44,7 @@ body {
   border-radius: 7px;
   text-align: center;
   align-self: center;
+  margin: 0;
 }
 
 .input-container button {
@@ -52,6 +53,7 @@ body {
   text-transform: uppercase;
   background-color: transparent;
   cursor: pointer;
+  color: black;
 }
 
 .cards-container {
