@@ -15,6 +15,7 @@ const Home = () => {
   const [sortBy, setSortBy] = useState("default");
 
   const sortOptions = [
+    "default",
     "Stars",
     "watchers",
     "forks count",
@@ -31,10 +32,7 @@ const Home = () => {
   }, [page]);
 
   const handleSort = (value) => {
-    if (value !== sortBy) {
-      setSortBy(value);
-    }
-    console.log(value);
+    setSortBy(value);
     let sortedRepositories = repositories;
 
     if (value === "Stars") {
@@ -55,11 +53,11 @@ const Home = () => {
       });
     } else if (value === "updated_at") {
       sortedRepositories.sort((a, b) => {
-        return a.updated_at - b.updated_at;
+        return new Date(a.updated_at) - new Date(b.updated_at);
       });
     } else if (value === "created_at") {
       sortedRepositories.sort((a, b) => {
-        return a.pushed_at - b.pushed_at;
+        return new Date(a.pushed_at) - new Date(b.pushed_at);
       });
     } else if (value === "name") {
       sortedRepositories.sort((a, b) => {
@@ -78,6 +76,7 @@ const Home = () => {
     });
 
     if (response.status === 200) {
+      console.log(response.data.items);
       setRepositories(response.data.items);
       setTotalCount(response.data.total_count);
       setLoading(false);
