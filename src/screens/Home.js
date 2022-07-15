@@ -4,14 +4,15 @@ import Card from "../components/Card";
 import Spinner from "../components/Spinner";
 import "../styles/Home.css";
 import _ from "lodash";
+import request from "../axios/get";
 
 const Home = () => {
   const [repositories, setRepositories] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
   const [page, setPage] = useState(1);
-  const [query, setQuery] = useState(null);
+  const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(false);
-  const [sortBy, setSortBy] = useState("name");
+  const [sortBy, setSortBy] = useState("default");
 
   const sortOptions = [
     "Stars",
@@ -26,7 +27,6 @@ const Home = () => {
   useEffect(() => {
     if (query) {
       handleSearch();
-      handleSort(sortBy);
     }
   }, [page]);
 
@@ -69,20 +69,13 @@ const Home = () => {
     setRepositories(_.cloneDeep(sortedRepositories));
   };
 
-  const handleSearch = async () => {
+  const handleSearch = async (e) => {
+    e && e.preventDefault();
     setLoading(true);
-    const response = await axios.get(
-      "https://api.github.com/search/repositories",
-      {
-        params: {
-          q: query,
-          page: page,
-        },
-        autorizations: {
-          auth: "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",
-        },
-      }
-    );
+    const response = await request("/search/repositories", {
+      q: query,
+      page: page,
+    });
 
     if (response.status === 200) {
       setRepositories(response.data.items);
@@ -95,42 +88,32 @@ const Home = () => {
 
   return (
     <div className="root">
-      <div className="input-container">
+      <form className="input-container" onSubmit={(e) => handleSearch(e)}>
         <input
           value={query}
           placeholder="search for repositories"
           onChange={(e) => setQuery(e.target.value)}
         />
-        <button onClick={handleSearch}>Search</button>
-      </div>
+        <button type="submit">Search</button>
+      </form>
       {loading ? (
         <Spinner />
       ) : (
         <>
           {repositories.length !== 0 ? (
             <>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  width: "100%",
-                  padding: "1rem",
-                }}
-              >
-                <h3>Search Results</h3>
-                <div className="select-container">
-                  <select
-                    value={sortBy}
-                    onChange={(e) => {
-                      handleSort(e.target.value);
-                    }}
-                  >
-                    {sortOptions.map((option, i) => (
-                      <option key={i}>{option}</option>
-                    ))}
-                  </select>
-                </div>
+              <h3>Search Results</h3>
+              <div className="select-container">
+                <select
+                  value={sortBy}
+                  onChange={(e) => {
+                    handleSort(e.target.value);
+                  }}
+                >
+                  {sortOptions.map((option, i) => (
+                    <option key={i}>{option}</option>
+                  ))}
+                </select>
               </div>
               <div className="cards-container">
                 {repositories.map((repo) => (
